@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+  <!--FACILITY-->
+  <bean id="facilityDataMap" class="java.util.HashMap" scope="prototype" >
+    <constructor-arg>
+      <map key-type="java.lang.String" value-type="java.lang.String">
+        <entry key="root" value="data" />
+        <entry key="facility" value="facility" />
+      </map>
+    </constructor-arg>
+  </bean>
+
+  <!--SUSPECT-->
+  <bean id="suspectDataMap" class="java.util.HashMap" scope="prototype" >
+    <constructor-arg>
+      <map key-type="java.lang.String" value-type="java.lang.String">
+        <entry key="root" value="" />
+        <entry key=""  value="arrestNumber" />
+        <entry key=""  value="name" />
+        <entry key=""  value="firstName" />
+        <entry key=""  value="middleName" />
+        <entry key=""  value="lastName" />
+        <entry key=""  value="suffix" />
+        <entry key=""  value="prefix" />
+        <entry key=""  value="dateOfBirth" />
+        <entry key=""  value="nationality" />
+        <entry key=""  value="race" />
+        <entry key=""  value="eyes" />
+        <entry key=""  value="hair" />
+        <entry key=""  value="gender" />
+        <entry key=""  value="weight" />
+        <entry key=""  value="height" />
+        <entry key=""  value="description" />
+        <entry key=""  value="originalBookDateTime" />
+      </map>
+    </constructor-arg>
+  </bean>
+
+  <!--IMAGE-->
+  <bean id="suspectImageDataMap" class="java.util.HashMap" scope="prototype" >
+    <constructor-arg>
+      <map key-type="java.lang.String" value-type="java.lang.String">
+        <entry key="selector" value="" />
+        <entry key="attr" value="" />
+      </map>
+    </constructor-arg>
+  </bean>
+
+  <!--ARREST-->
+  <bean id="arrestDataMap" class="java.util.HashMap" scope="prototype" >
+    <constructor-arg>
+      <map key-type="java.lang.String" value-type="java.lang.String">
+        <entry key="root" value="" />
+        <entry key=""  value="arrestNumber" />
+        <entry key=""  value="arrestDate" />
+        <entry key=""  value="scheduledRelease" />
+        <entry key=""  value="alias" />
+        <entry key=""  value="bookingDate" />
+        <entry key=""  value="dateReleased" />
+        <entry key=""  value="arrestingOfficer" />
+        <entry key=""  value="badge" />
+        <entry key=""  value="arrestingAgency" />
+        <entry key=""  value="inmateClassification" />
+        <entry key=""  value="address" />
+        <entry key=""  value="zipCode" />
+        <entry key=""  value="bondAgency" />
+        <entry key=""  value="retrievedOn" />
+        <entry key=""  value="dateOfBirth" />
+        <entry key=""  value="age" />
+        <entry key=""  value="isApproximateDOB" />
+      </map>
+    </constructor-arg>
+  </bean>
+
+  <!--CASE-->
+  <bean id="caseDataMap" class="java.util.HashMap" scope="prototype" >
+    <constructor-arg>
+      <map key-type="java.lang.String" value-type="java.lang.String">
+        <entry key="root" value="" />
+        <entry key=""  value="caseNumber" />
+        <entry key=""  value="arrestNumber" />
+        <entry key=""  value="caseId" />
+        <entry key=""  value="status" />
+        <entry key=""  value="bondType" />
+        <entry key=""  value="bondAmount" />
+        <entry key=""  value="fineAmount" />
+        <entry key=""  value="sentence" />
+        <entry key=""  value="maxSentence" />
+        <entry key=""  value="courtTime" />
+      </map>
+    </constructor-arg>
+  </bean>
+
+  <!--CHARGE-->
+  <bean id="chargeDataMap" class="java.util.HashMap" scope="prototype" >
+    <constructor-arg>
+      <map key-type="java.lang.String" value-type="java.lang.String">
+        <entry key="root" value="" />
+        <entry key=""  value="arrestCode" />
+        <entry key=""  value="arrestNumber" />
+        <entry key=""  value="chargeId" />
+        <entry key=""  value="caseNumber" />
+        <entry key=""  value="crimeType" />
+        <entry key=""  value="counts" />
+        <entry key=""  value="modifier" />
+        <entry key=""  value="controlNumber" />
+        <entry key=""  value="warrantNumber" />
+        <entry key=""  value="chargeDescription" />
+        <entry key=""  value="bondType" />
+        <entry key=""  value="bondAmount" />
+        <entry key=""  value="courtType" />
+        <entry key=""  value="courtTime" />
+        <entry key=""  value="chargeStatus" />
+        <entry key=""  value="offenseDate" />
+        <entry key=""  value="arrestDate" />
+        <entry key=""  value="arrestingAgency" />
+        <entry key=""  value="sentence" />
+        <entry key=""  value="maxSentence" />
+
+<!-- optional field added in fl\Broward_County how additional info -->        
+        <entry key=""  value="chargeComment" />
+
+      </map>
+    </constructor-arg>
+  </bean>
+</beans>

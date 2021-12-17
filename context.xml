@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+  <!-- ENVIRONMENT -->
+  <bean id="typeEnv" class="local.demo.state_machine.state_machine.tools.EnvironmentVariable">
+    <constructor-arg index="0" value="TYPE_ENV" />
+    <constructor-arg index="1" value="String" />
+    <constructor-arg index="2" value="DEV" /> <!-- DEV: Developer. / PROD: Production-->
+  </bean>
+
+  <!-- MAIN_URL -->
+  <bean id="mainUrl" class="java.lang.String">
+    <constructor-arg value="https://forrestcountysheriff.com/" />
+  </bean>
+  <bean id="mainDomain" class="java.lang.String">
+    <constructor-arg value="forrestcountysheriff.com" />
+  </bean>
+
+  <!-- CONTEXT -->
+  <bean id="context" class="local.demo.state_machine.state_machine.states.HtmlRequestContext">
+    <constructor-arg index="0">
+      <map>
+        <entry key="START"                  value-ref="facilityState" />
+        <entry key="PARSE_FACILITY"         value-ref="parseFacilityJsonState" />
+        <entry key="GET_VIEWSTATE"          value-ref="getViewStateState" />
+        
+        <!-- CAPTCHA -->
+        <entry key="GET_CAPTCHA"            value-ref="getCaptcha" />
+        <entry key="PARSE_CAPTCHA"          value-ref="parseCaptchaState" />
+        <entry key="CAPTCHA_STASH"          value-ref="stashCaptcha" />
+        <entry key="SOLVE_CAPTCHA"          value-ref="solveCaptchaState" />
+        <entry key="CAPTCHA_UNSET"          value-ref="unsetForCaptcha" />
+        <entry key="POST_CAPTCHA_SOLUTION"  value-ref="postCaptchaSolution" />
+        <entry key="CAPTCHA_UNSTASH"        value-ref="unstashCaptcha" />
+        <entry key="PROCESS_CAPTCHA_SUCCESS" value-ref="processCaptchaSuccess" /> 
+        
+        <!-- PARSE_SUSPECTS -->
+        <entry key="GET_SUSPECTS_UPDATE_CAPTCHA"     value-ref="getSuspectsUpdateCaptchaState" />
+        <entry key="PARSE_SUSPECT_LIST"       value-ref="parseSuspectListState" />
+        
+        
+        <!-- PARSE_ARRESTS -->
+        <!-- PARSE_CHARGES -->
+        <!-- PARSE_CASES -->
+        <!-- PARSE_IMAGES -->
+
+        <entry key="VALIDATION_STATE"       value-ref="validationState" />  
+        <entry key="CHECK_ENV"              value-ref="checkEnvirontmenState" />
+        <entry key="PUSH"                   value-ref="vc7apiPushState" />
+        <entry key="LOG"                    value-ref="logDumpState" />
+        <entry key="END"                    value-ref="endState" />
+      </map>
+    </constructor-arg>
+    <constructor-arg index="1" type="java.lang.String" value="START" />
+    <constructor-arg index="2" ref="mainUrl" />
+    <constructor-arg index="3">
+      <map key-type="java.lang.String" value-type="java.lang.String">
+        <!-- requestHeaders -->
+        <entry key="User-Agent" value="BioBot/1.0 (compatible; https://biometrica.com/what-is-biobot)" />
+        <entry key="Host"       value-ref="mainDomain" />
+        <entry key="Origin"     value-ref="mainUrl" />
+      </map>
+    </constructor-arg>
+    <constructor-arg index="4">
+      <!-- requestParameters -->
+      <map key-type="java.lang.String" value-type="java.lang.String">
+        <entry key="SOME_HEADER" value="SOME_HEADER_VALUE" />        
+      </map>
+    </constructor-arg>
+    <constructor-arg index="5">
+      <!--requestCookies-->
+      <map key-type="java.lang.String" value-type="java.lang.String">
+        <entry key="SOME_COOKIE" value="SOME_COOKIE_VALUE" />        
+      </map>
+    </constructor-arg>
+  </bean>
+</beans>

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="caseNumberValidation" class="local.demo.state_machine.state_machine.validations.PresenceValidation">
+    <constructor-arg index="0" type="local.demo.state_machine.state_machine.ResultType" value="Case" />
+    <constructor-arg index="1" value="caseNumber"/>
+    </bean>
+
+    <bean id="chargeDescriptionValidation" class="local.demo.state_machine.state_machine.validations.MultiFieldValidation">
+    <constructor-arg index="0" type="local.demo.state_machine.state_machine.ResultType" value="Charge" />
+    <constructor-arg index="1">
+      <list>
+        <bean class="local.demo.state_machine.state_machine.validations.checks.CompositeCheck">
+          <constructor-arg index="0" type="local.demo.state_machine.state_machine.validations.CompositeValidationType" value="ONE_REQUIRED" />
+          <constructor-arg index="1">
+            <list value-type="local.demo.state_machine.state_machine.validations.checks.ValidationCheck">
+              <bean class="local.demo.state_machine.state_machine.validations.checks.NotEmptyCheck">
+                <constructor-arg index="0" value="chargeDescription" />
+              </bean>
+              <bean class="local.demo.state_machine.state_machine.validations.checks.NotEmptyCheck">
+                <constructor-arg index="0" value="arrestCode" />
+              </bean>
+            </list>
+          </constructor-arg>
+        </bean>        
+      </list>
+    </constructor-arg>   
+    </bean>
+
+  <bean id="suspectCompositeValidation" class="local.demo.state_machine.state_machine.validations.MultiFieldValidation">
+  <constructor-arg index="0" type="local.demo.state_machine.state_machine.ResultType" value="Suspect" />
+  <constructor-arg index="1">
+    <list>
+      <bean class="local.demo.state_machine.state_machine.validations.checks.NotEmptyCheck">
+        <constructor-arg index="0" value="originalBookDateTime" />
+      </bean>
+      <bean class="local.demo.state_machine.state_machine.validations.checks.CompositeCheck">
+        <constructor-arg index="0" type="local.demo.state_machine.state_machine.validations.CompositeValidationType" value="ONE_REQUIRED" />
+        <constructor-arg index="1">
+          <list value-type="local.demo.state_machine.state_machine.validations.checks.ValidationCheck">
+            <bean class="local.demo.state_machine.state_machine.validations.checks.NotEmptyCheck">
+              <constructor-arg index="0" value="name" />
+            </bean>
+            <bean class="local.demo.state_machine.state_machine.validations.checks.CompositeCheck">
+              <constructor-arg index="0" type="local.demo.state_machine.state_machine.validations.CompositeValidationType" value="ALL_REQUIRED" />
+              <constructor-arg index="1">
+                <list value-type="local.demo.state_machine.state_machine.validations.checks.ValidationCheck">
+                  <bean class="local.demo.state_machine.state_machine.validations.checks.NotEmptyCheck">
+                    <constructor-arg index="0" value="lastName" />
+                  </bean>
+                  <bean class="local.demo.state_machine.state_machine.validations.checks.NotEmptyCheck">
+                    <constructor-arg index="0" value="firstName" />
+                  </bean>
+                </list>
+              </constructor-arg>
+            </bean>
+          </list>
+        </constructor-arg>
+      </bean>
+    </list>
+  </constructor-arg>
+</bean>
+
+
+ <bean id="arrestCompositeValidation" class="local.demo.state_machine.state_machine.validations.MultiFieldValidation">
+  <constructor-arg index="0" type="local.demo.state_machine.state_machine.ResultType" value="Arrest" />
+  <constructor-arg index="1">
+      <bean class="local.demo.state_machine.state_machine.validations.checks.CompositeCheck">
+        <constructor-arg index="0" type="local.demo.state_machine.state_machine.validations.CompositeValidationType" value="ALL_REQUIRED" />
+        <constructor-arg index="1">
+          <list value-type="local.demo.state_machine.state_machine.validations.checks.ValidationCheck">
+            <bean class="local.demo.state_machine.state_machine.validations.checks.NotEmptyCheck">
+              <constructor-arg index="0" value="arrestNumber" />
+            </bean>           
+            <bean class="local.demo.state_machine.state_machine.validations.checks.NotEmptyCheck">
+              <constructor-arg index="0" value="facility" />
+            </bean>
+            <bean class="local.demo.state_machine.state_machine.validations.checks.CompositeCheck">
+              <constructor-arg index="0" type="local.demo.state_machine.state_machine.validations.CompositeValidationType" value="ONE_REQUIRED" />
+              <constructor-arg index="1">
+                <list value-type="local.demo.state_machine.state_machine.validations.checks.ValidationCheck">
+                  <bean class="local.demo.state_machine.state_machine.validations.checks.NotEmptyCheck">
+                    <constructor-arg index="0" value="arrestDate" />
+                  </bean>
+                  <bean class="local.demo.state_machine.state_machine.validations.checks.NotEmptyCheck">
+                    <constructor-arg index="0" value="bookingDate" />
+                  </bean>
+                </list>
+              </constructor-arg>
+            </bean>
+          </list>
+        </constructor-arg>
+      </bean>
+  </constructor-arg>
+</bean>
+
+ <bean id="suspectArrestValidation" class="local.demo.state_machine.state_machine.validations.SuspectArrestMatchValidation"/>
+
+
+</beans>

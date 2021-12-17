@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+  <!-- IMPORTS -->
+  <import resource="context.xml" />
+  <import resource="maps.xml" />
+  <import resource="validation.xml" />
+  <import resource="auth-v2.xml" />
+
+  <bean id="stash" class="local.demo.state_machine.state_machine.HtmlContextStash" />
+
+  <!--START-->
+  <bean id="facilityState" class="local.demo.state_machine.state_machine.states.JsonContentState">
+    <constructor-arg index="0" value="PARSE_FACILITY" />
+    <constructor-arg index="1" value="{&quot;data&quot;:{&quot;facility&quot;:&quot;Forrest County, MS&quot;}}" />
+  </bean>
+
+  <!--PARSE_FACILITY-->
+  <bean id="parseFacilityJsonState" class="local.demo.state_machine.state_machine.states.JsonParserState">
+    <constructor-arg index="0" type="java.lang.String" value="GET_VIEWSTATE" />
+    <constructor-arg index="1" ref="facilityDataMap" />
+    <constructor-arg index="2"><null /></constructor-arg>
+    <constructor-arg index="3" type="local.demo.state_machine.state_machine.ResultType" value="Facility" />
+  </bean>
+
+  <!--GET_VIEWSTATE-->
+  <bean id="getViewStateState" class="local.demo.state_machine.state_machine.states.HtmlGetRequestState">
+    <constructor-arg index="0" value="GET_CAPTCHA" />
+    <constructor-arg index="1" value="inmate-roster"/>
+    <constructor-arg index="2" value="html" />
+  </bean>
+
+  <!-- GET_CAPTCHA -->
+  <!-- Makes a request to get Captcha image. -->
+  <bean id="getCaptcha" class="local.demo.state_machine.state_machine.states.JsonGetRequestState">
+      <constructor-arg index="0" value="PARSE_CAPTCHA" />
+      <constructor-arg index="1" value="https://omsweb.public-safety-cloud.com/jtclientweb/captcha/getnewcaptchaclient" />
+  </bean>
+
+  <!-- PARSE_CAPTCHA -->
+  <!-- This state gets result from Json and stores it in the query state -->
+  <bean id="parseCaptchaState" class="local.demo.state_machine.state_machine.states.JsonContentToQueryState">
+      <constructor-arg index="0" value="CAPTCHA_STASH" />
+      <constructor-arg index="1">
+          <map>
+              <entry key="captchaImage"   value="$.captchaImage" />
+              <entry key="captchaKey"     value="$.captchaKey" />
+          </map>
+      </constructor-arg>
+  </bean>
+
+  <!-- CAPTCHA_STASH -->
+  <!-- Makes values in context available for future states until it's unstash -->
+  <bean id="stashCaptcha" class="local.demo.state_machine.state_machine.states.StashContextState">
+      <constructor-arg index="0" value="SOLVE_CAPTCHA" />
+      <constructor-arg index="1" ref="stash" />
+  </bean>
+
+  <!-- SOLVE_CAPTCHA -->
+  <!-- Solves captcha by sending the captcha image to Anti Captch service -->
+  <bean id="captchaCoder" class="local.demo.state_machine.state_machine.captcha.antiCaptcha.AntiCaptchaContext">
+      <constructor-arg index="0" ref="antiCaptchaKey" />
+  </bean>
+  <bean id="solveCaptchaState" class="local.demo.state_machine.state_machine.states.CaptchaProcessState">
+      <constructor-arg index="0" value="CAPTCHA_UNSET" />
+      <constructor-arg index="1" ref="captchaCoder" />
+      <constructor-arg index="2" value="$.captchaImage" />
+      <constructor-arg index="3" value="userCode" />
+  </bean>
+
+  <!-- CAPTCHA_UNSET -->
+  <!-- Removes captcha image from request parameters -->
+  <bean id="unsetForCaptcha" class="local.demo.state_machine.state_machine.states.UnsetRequestState">
+      <constructor-arg index="0" value="POST_CAPTCHA_SOLUTION" />
+      <constructor-arg index="1">
+          <null />
+      </constructor-arg>
+      <constructor-arg index="2">
+          <list>
+              <value>captchaImage</value>
+          </list>
+      </constructor-arg>
+      <constructor-arg index="3">
+          <null />
+      </constructor-arg>
+  </bean>
+
+  <!-- POST_CAPTCHA_SOLUTION -->
+  <!-- Send Capctha solution to validate, in return we should get the captchaKey used in further requests -->
+  <bean id="postCaptchaSuccess" class="local.demo.state_machine.state_machine.transitions.StateTransition">
+      <constructor-arg index="0" value="#context.getContentAsJsonDocument().has('captchaMatched') and #context.getContentAsJsonDocument().getBoolean('captchaMatched')" />
+      <constructor-arg index="1" value="CAPTCHA_UNSTASH" />
+      <constructor-arg index="2" value="0" />
+  </bean>
+  <bean id="postCaptchaError" class="local.demo.state_machine.state_machine.transitions.StateTransition">
+      <constructor-arg index="0" value="true" />
+      <!--        <constructor-arg index="1" value="GET_CAPTCHA" />-->
+      <constructor-arg index="1" value="END" />
+      <constructor-arg index="2" value="1" />
+  </bean>
+  <bean id="postCaptchaSolution" class="local.demo.state_machine.state_machine.states.JsonPostRequestState">
+      <constructor-arg index="0">
+          <list>
+              <ref bean="postCaptchaSuccess" />
+              <ref bean="postCaptchaError" />
+          </list>
+      </constructor-arg>
+      <constructor-arg index="1" value="https://omsweb.public-safety-cloud.com/jtclientweb/Captcha/validatecaptcha"/>
+  </bean>
+
+  <!-- CAPTCHA_UNSTASH -->
+  <!-- Unstashed stashed elements from context -->
+  <bean id="unstashCaptcha" class="local.demo.state_machine.state_machine.states.UnstashContextState">
+      <constructor-arg index="0" value="PROCESS_CAPTCHA_SUCCESS" />
+      <constructor-arg index="1" ref="stash" />
+      <constructor-arg index="2" value="false" />
+  </bean>
+
+  <!-- PROCESS_CAPTCHA_SUCCESS -->
+  <!-- Saved json response from previous request to the url query string -->
+  <bean id="processCaptchaSuccess" class="local.demo.state_machine.state_machine.states.JsonContentToQueryState">
+      <constructor-arg index="0" value="GET_SUSPECTS_UPDATE_CAPTCHA" />
+      <constructor-arg index="1">
+          <map>
+              <entry key="captchaKey"     value="$.captchaKey" />
+          </map>
+      </constructor-arg>
+      <constructor-arg index="2" value="true" />
+  </bean>
+
+  <!--GET_SUSPECTS_UPDATE_CAPTCHA-->
+  <bean id="getSuspectsUpdateCaptchaState" class="local.demo.state_machine.state_machine.states.HtmlPostRequestState">
+    <constructor-arg index="0" value="PARSE_SUSPECT_LIST" />
+    <constructor-arg index="1" value="" />
+    <constructor-arg index="2" value="html" />
+    <constructor-arg index="3" value="true" />
+  </bean>
+
+  <!--PARSE_SUSPECT_LIST-->
+  <bean id="parseSuspectListState" class="local.demo.state_machine.state_machine.states.JsonParserState">
+    <constructor-arg index="0" type="java.lang.String" value="LOG" />
+    <constructor-arg index="1" ref="suspectDataMap" />
+    <constructor-arg index="2" value="arrestNumber" />
+    <constructor-arg index="3" type="local.demo.state_machine.state_machine.ResultType" value="Suspect" />
+  </bean>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <!--VALIDATION_STATE-->
+  <bean id="validationSuccess" class="local.demo.state_machine.state_machine.transitions.StateTransition">
+    <constructor-arg index="0" value="#context.getContentAsJsonDocument().getBoolean(&quot;success&quot;)" />
+    <constructor-arg index="1" value="CHECK_ENV" />
+    <constructor-arg index="2" value="0" />
+  </bean>
+  <bean id="validationFailure" class="local.demo.state_machine.state_machine.transitions.StateTransition">
+    <constructor-arg index="0" value="true" />
+    <constructor-arg index="1" value="LOG" />
+    <constructor-arg index="2" value="1" />
+  </bean>
+  <bean id="validationState" class="local.demo.state_machine.state_machine.states.ValidationState" >
+    <constructor-arg index="0">
+      <list>
+        <ref bean="validationSuccess" />
+        <ref bean="validationFailure" />
+      </list>
+    </constructor-arg>
+    <constructor-arg index="1">
+      <map key-type="local.demo.state_machine.state_machine.validations.Validation" value-type="java.lang.Boolean">
+        <entry key-ref="caseNumberValidation" value="false"/>
+        <entry key-ref="chargeDescriptionValidation" value="false"/>
+        <entry key-ref="suspectCompositeValidation" value="true"/>
+        <entry key-ref="arrestCompositeValidation" value="true"/>
+        <entry key-ref="suspectArrestValidation" value="true"/>
+      </map>
+    </constructor-arg>
+    <constructor-arg index="2" value="10" />
+  </bean>
+
+  <!--CHECK_ENV-->
+  <bean id="checkEnvProd" class="local.demo.state_machine.state_machine.transitions.StateTransition">
+    <constructor-arg index="0" value="#{typeEnv.getValue().equalsIgnoreCase('PROD')}" />
+    <constructor-arg index="1" value="PUSH" />
+    <constructor-arg index="2" value="0" />
+  </bean>
+  <bean id="checkEnvDefault" class="local.demo.state_machine.state_machine.transitions.StateTransition">
+    <constructor-arg index="0" value="true" />
+    <constructor-arg index="1" value="LOG" />
+    <constructor-arg index="2" value="2" />
+  </bean>
+  <bean id="checkEnvirontmenState" class="local.demo.state_machine.state_machine.states.SleepState">
+    <constructor-arg index="0">
+      <list>
+        <ref bean="checkEnvProd" />
+        <ref bean="checkEnvDefault" />
+      </list>
+    </constructor-arg>
+    <constructor-arg index="1" value="0"/>
+  </bean>
+
+  <!-- PUSH -->
+  <bean id="vc7apiPushStateDone" class="local.demo.state_machine.state_machine.transitions.StateTransition">
+    <constructor-arg value="true" />
+    <constructor-arg value="END" />
+    <constructor-arg value="0" />
+  </bean>
+  <bean id="vc7apiPushState" class="local.demo.state_machine.state_machine.states.PushToVC7ApiState">
+    <constructor-arg index="0">
+      <list>
+        <ref bean="vc7apiPushStateDone" />
+      </list>
+    </constructor-arg>
+    <constructor-arg index="1" ref="pushUrl" />
+    <constructor-arg index="2" ref="pushUsername" />
+    <constructor-arg index="3" ref="pushPassword" />
+    <constructor-arg index="4">
+      <list value-type="java.lang.String" />
+    </constructor-arg>
+    <constructor-arg index="5" ref="statsEndpoint" />
+    <constructor-arg index="6" ref="statsApiKey" />
+  </bean> 
+
+  <!--LOG-->
+  <bean id="logDumpState" class="local.demo.state_machine.state_machine.states.JsonLogDumpState" >
+    <constructor-arg index="0" value="END" />
+  </bean>
+
+  <!--END-->
+  <bean id="endState" class="local.demo.state_machine.state_machine.states.EndState" />
+</beans>
