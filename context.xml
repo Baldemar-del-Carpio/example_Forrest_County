@@ -38,8 +38,8 @@
         <entry key="PROCESS_CAPTCHA_SUCCESS" value-ref="processCaptchaSuccess" /> 
         
         <!-- PARSE_SUSPECTS -->
-        <entry key="GET_SUSPECTS_UPDATE_CAPTCHA"     value-ref="getSuspectsUpdateCaptchaState" />
-        <entry key="PARSE_SUSPECT_LIST"       value-ref="parseSuspectListState" />
+        <entry key="GET_SUSPECT_LIST"     value-ref="getSuspectListState" />
+        <entry key="PARSE_SUSPECT_LIST"   value-ref="parseSuspectListState" />
         
         
         <!-- PARSE_ARRESTS -->
