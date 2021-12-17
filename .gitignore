@@ -1,0 +1,11 @@
+logfile*.log
+*.js
+BioBot\ Documentation/*
+.vscode
+auth.xml
+auth-v2.xml
+debug*.*
+images
+jars
+.DS_Store
+*.jar
