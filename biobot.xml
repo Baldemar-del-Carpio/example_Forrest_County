@@ -134,7 +134,7 @@
   <!--GET_SUSPECT_LIST-->
   <bean id="getSuspectListState" class="local.demo.state_machine.state_machine.states.JsonPostRequestState">
     <constructor-arg index="0" value="PARSE_SUSPECT_LIST" />
-    <constructor-arg index="1" value="https://omsweb.public-safety-cloud.com/jtclientweb/jailtracker/index/Forrest_County_MS" />
+    <constructor-arg index="1" value="https://omsweb.public-safety-cloud.com/jtclientweb/Offender/Forrest_County_MS" />
   </bean>
 
   <!--PARSE_SUSPECT_LIST-->
