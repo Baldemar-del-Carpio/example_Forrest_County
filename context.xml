@@ -41,7 +41,10 @@
         <entry key="GET_SUSPECT_LIST"     value-ref="getSuspectListState" />
         <entry key="PARSE_SUSPECT_LIST"   value-ref="parseSuspectListState" />
         
-        
+        <entry key="URI_ID_ITERATOR"       value-ref="uriIdIteratorState" />
+        <entry key="GET_SUSPECT_DETAILS"   value-ref="getSuspectDetailsState" />
+        <entry key="PARSE_SUSPECT_DETAILS" value-ref="parseSuspectDetailsState" />
+               
         <!-- PARSE_ARRESTS -->
         <!-- PARSE_CHARGES -->
         <!-- PARSE_CASES -->
