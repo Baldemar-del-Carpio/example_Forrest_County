@@ -45,7 +45,12 @@
         <!-- PARSE_ARRESTS -->
         <!-- PARSE_CHARGES -->
         <!-- PARSE_CASES -->
+
         <!-- PARSE_IMAGES -->
+        <entry key="IMAGE_ITERATOR"       value-ref="imageIteratorState" />
+        <entry key="SET_IMAGE_URL"        value-ref="setImageUrlState" />
+        <entry key="SAVE_IMAGE"           value-ref="saveImageState" />
+
 
         <entry key="VALIDATION_STATE"       value-ref="validationState" />  
         <entry key="CHECK_ENV"              value-ref="checkEnvirontmenState" />
