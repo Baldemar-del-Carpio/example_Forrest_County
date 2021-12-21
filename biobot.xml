@@ -139,81 +139,22 @@
 
   <!--PARSE_SUSPECT_LIST-->
   <bean id="parseSuspectListState" class="local.demo.state_machine.state_machine.states.JsonParserState">
-    <constructor-arg index="0" type="java.lang.String" value="URI_ID_ITERATOR" />
+    <constructor-arg index="0" type="java.lang.String" value="IMAGE_ITERATOR" />
     <constructor-arg index="1" ref="suspectDataMap" />
     <constructor-arg index="2" value="arrestNumber" />
     <constructor-arg index="3" type="local.demo.state_machine.state_machine.ResultType" value="Suspect" />
+    <constructor-arg index="4" value="true" />
   </bean>
- 
-
-
-
-  <!--URI_ID_ITERATOR-->
-  <bean id="uriIdIteratorStateStep" class="local.demo.state_machine.state_machine.transitions.StateTransition">
-    <constructor-arg value="#context.getContent() != null" />
-    <constructor-arg value="GET_SUSPECT_DETAILS" />
-    <constructor-arg value="0" />
-  </bean>
-  <bean id="uriIdIteratorStateDone" class="local.demo.state_machine.state_machine.transitions.StateTransition">
-    <constructor-arg value="true" />
-    <constructor-arg value="IMAGES_ITERATOR" />
-    <constructor-arg value="1" />
-  </bean>
-  <bean id="uriIdIterator" class="local.demo.state_machine.state_machine.iterators.PropertyIterator">
-    <constructor-arg index="0" value="sysid" />
-  </bean>
-  <bean id="uriIdIteratorState" class="local.demo.state_machine.state_machine.states.UriIteratorState">
-    <constructor-arg index="0">
-      <list>
-        <ref bean="uriIdIteratorStateStep" />
-        <ref bean="uriIdIteratorStateDone" />
-      </list>
-    </constructor-arg>
-    <constructor-arg value="" />
-    <constructor-arg ref="uriIdIterator" />
-    <constructor-arg value="true" />
-  </bean>
-
-  <!--GET_SUSPECT_DETAILS-->
-  <bean id="getSuspectDetailsState" class="local.demo.state_machine.state_machine.states.HtmlGetRequestState">
-    <constructor-arg index="0" type="java.lang.String" value="PARSE_SUSPECT_DETAILS" />
-    <constructor-arg index="1"><null /></constructor-arg>
-    <constructor-arg index="2" value="html" />
-  </bean>
-
-  <!--PARSE_SUSPECT_DETAILS-->
-  <bean id="parseSuspectDetailsState" class="local.demo.state_machine.state_machine.states.HtmlParserMultiState">
-    <constructor-arg index="0" type="java.lang.String" value="URI_ID_ITERATOR" />
-    <constructor-arg index="1">
-      <map>
-        <entry key="root" value="body" />
-      </map>
-    </constructor-arg>
-    <constructor-arg index="2" ref="suspectDetailDataMap" />
-    <constructor-arg index="3" ref="arrestDataMap" />
-    <constructor-arg index="4"><null /></constructor-arg>
-    <constructor-arg index="5" ref="chargeDataMap" />
-    <constructor-arg index="6" value="sysid" />
-    <constructor-arg index="7" value="true" />
-  </bean>
-
-
-
-
-
-
-
-
 
   <!--IMAGE_ITERATOR-->
   <bean id="imageLocUriIteratorNext" class="local.demo.state_machine.state_machine.transitions.StateTransition">
     <constructor-arg value="#context.getContent() != null" />
-    <constructor-arg value="SET_IMAGE_URL" />
+    <constructor-arg value="PARSE_SUSPECT_IMAGE" />
     <constructor-arg value="0" />
   </bean>
   <bean id="imageLocUriIteratorDone" class="local.demo.state_machine.state_machine.transitions.StateTransition">
     <constructor-arg value="true" />
-    <constructor-arg value="VALIDATION_STATE" />
+    <constructor-arg value="LOG" />
     <constructor-arg value="1" />
   </bean>
   <bean id="imageIterator" class="local.demo.state_machine.state_machine.iterators.PropertyIterator">
@@ -227,22 +168,14 @@
       </list>
     </constructor-arg>
     <constructor-arg index="1" ref="imageIterator"/>
-    <constructor-arg index="2" value="" />
-    <constructor-arg index="3" value="true" />
+    <constructor-arg index="2" value="https://omsweb.public-safety-cloud.com/jtclientweb/Offender/Forrest_County_MS/%s/image" />
   </bean> 
 
-
-  <!--SET_IMAGE_URL-->
-  <bean id="setImageUrlState" class="local.demo.state_machine.state_machine.states.SetRequestFromSuspectState">
-    <constructor-arg index="0" value="SAVE_IMAGE"/>
-    <constructor-arg index="1" value="https://omsweb.public-safety-cloud.com/jtclientweb/Offender/Forrest_County_MS/_imgUrl_/image" />
-    <constructor-arg index="2">
-      <map key-type="java.lang.String" value-type="java.lang.String">
-        <entry key="imgUrl" value="_imgUrl_" />
-      </map>
-    </constructor-arg>
-    <constructor-arg index="3"><null /></constructor-arg>
-    <constructor-arg index="4"><null /></constructor-arg>
+  <!-- PARSE_SUSPECT_IMAGE -->
+  <bean id="parseImageState" class="local.demo.state_machine.state_machine.states.HtmlGetRequestState">
+    <constructor-arg index="0" value="SAVE_IMAGE" />
+    <constructor-arg index="1" value="ViewImageFull.aspx" />
+    <constructor-arg index="2" value="json" />
   </bean>
 
   <!--SAVE_IMAGE-->
@@ -251,18 +184,6 @@
     <constructor-arg index="1" value="images/" />
     <constructor-arg index="2" value="true" />
   </bean>
-
-
-
-
-
-
-
-
-
-
-
-
 
   <!--VALIDATION_STATE-->
   <bean id="validationSuccess" class="local.demo.state_machine.state_machine.transitions.StateTransition">
