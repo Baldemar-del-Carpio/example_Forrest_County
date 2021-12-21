@@ -20,9 +20,16 @@
 
   <!--PARSE_FACILITY-->
   <bean id="parseFacilityJsonState" class="local.demo.state_machine.state_machine.states.JsonParserState">
-    <constructor-arg index="0" type="java.lang.String" value="GET_VIEWSTATE" />
-    <constructor-arg index="1" ref="facilityDataMap" />
-    <constructor-arg index="2"><null /></constructor-arg>
+    <constructor-arg index="0" value="GET_VIEWSTATE" />
+    <constructor-arg index="1">
+      <map>
+        <entry key="root" value="data" />
+        <entry key="facility" value="facility" />
+      </map>
+    </constructor-arg>
+    <constructor-arg index="2">
+      <null />
+    </constructor-arg>
     <constructor-arg index="3" type="local.demo.state_machine.state_machine.ResultType" value="Facility" />
   </bean>
 
@@ -30,7 +37,7 @@
   <bean id="getViewStateState" class="local.demo.state_machine.state_machine.states.HtmlGetRequestState">
     <constructor-arg index="0" value="GET_CAPTCHA" />
     <constructor-arg index="1" value="inmate-roster"/>
-    <constructor-arg index="2" value="html" />
+    <constructor-arg index="2" value="json" />
   </bean>
 
   <!-- GET_CAPTCHA -->
@@ -138,18 +145,17 @@
   </bean>
 
   <!--PARSE_SUSPECT_LIST-->
-  <bean id="parseSuspectListState" class="local.demo.state_machine.state_machine.states.JsonParserState">
-    <constructor-arg index="0" type="java.lang.String" value="IMAGE_ITERATOR" />
+  <bean id="parseSuspectState" class="local.demo.state_machine.state_machine.states.JsonParserState">
+    <constructor-arg index="0" type="java.lang.String" value="LOG" />
     <constructor-arg index="1" ref="suspectDataMap" />
     <constructor-arg index="2" value="arrestNumber" />
     <constructor-arg index="3" type="local.demo.state_machine.state_machine.ResultType" value="Suspect" />
-    <constructor-arg index="4" value="true" />
   </bean>
 
   <!--IMAGE_ITERATOR-->
   <bean id="imageLocUriIteratorNext" class="local.demo.state_machine.state_machine.transitions.StateTransition">
     <constructor-arg value="#context.getContent() != null" />
-    <constructor-arg value="PARSE_SUSPECT_IMAGE" />
+    <constructor-arg value="SAVE_IMAGE" />
     <constructor-arg value="0" />
   </bean>
   <bean id="imageLocUriIteratorDone" class="local.demo.state_machine.state_machine.transitions.StateTransition">
