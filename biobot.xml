@@ -146,7 +146,7 @@
 
   <!--PARSE_SUSPECT_LIST-->
   <bean id="parseSuspectState" class="local.demo.state_machine.state_machine.states.JsonParserState">
-    <constructor-arg index="0" type="java.lang.String" value="VALIDATION_STATE" />
+    <constructor-arg index="0" type="java.lang.String" value="IMAGE_ITERATOR" />
     <constructor-arg index="1">
       <map>
         <entry key="root" value="offenders" />
@@ -175,15 +175,15 @@
   <bean id="imageIterator" class="local.demo.state_machine.state_machine.iterators.PropertyIterator">
     <constructor-arg index="0" value="arrestNumber" />
   </bean>
-  <bean id="imageIteratorState" class="local.demo.state_machine.state_machine.states.RequestIteratorState">
+  <bean id="imageIteratorState" class="local.demo.state_machine.state_machine.states.UriIteratorState">
     <constructor-arg index="0">
       <list>
         <ref bean="imageLocUriIteratorNext" />
         <ref bean="imageLocUriIteratorDone" />
       </list>
     </constructor-arg>
-    <constructor-arg index="1" ref="imageIterator"/>
-    <constructor-arg index="2" value="https://omsweb.public-safety-cloud.com/jtclientweb/Offender/Forrest_County_MS/%s/image" />
+    <constructor-arg index="1" value="https://omsweb.public-safety-cloud.com/jtclientweb/Offender/Forrest_County_MS/%s/image" />
+    <constructor-arg index="2" ref="imageIterator"/>
   </bean> 
 
   <!--SAVE_IMAGE-->
