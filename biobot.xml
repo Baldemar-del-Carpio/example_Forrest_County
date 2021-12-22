@@ -146,8 +146,12 @@
 
   <!--PARSE_SUSPECT_LIST-->
   <bean id="parseSuspectState" class="local.demo.state_machine.state_machine.states.JsonParserState">
-    <constructor-arg index="0" type="java.lang.String" value="LOG" />
-    <constructor-arg index="1" ref="suspectDataMap" />
+    <constructor-arg index="0" type="java.lang.String" value="PARSE_SUSPECT_IMAGE" />
+    <constructor-arg index="1">
+      <map>
+        <entry key="root" value="offenders" />
+      </map>
+    </constructor-arg>
     <constructor-arg index="2" value="arrestNumber" />
     <constructor-arg index="3" type="local.demo.state_machine.state_machine.ResultType" value="Suspect" />
   </bean>
@@ -160,7 +164,7 @@
   </bean>
   <bean id="imageLocUriIteratorDone" class="local.demo.state_machine.state_machine.transitions.StateTransition">
     <constructor-arg value="true" />
-    <constructor-arg value="LOG" />
+    <constructor-arg value="VALIDATION_STATE" />
     <constructor-arg value="1" />
   </bean>
   <bean id="imageIterator" class="local.demo.state_machine.state_machine.iterators.PropertyIterator">

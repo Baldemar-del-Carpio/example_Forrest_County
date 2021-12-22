@@ -40,6 +40,7 @@
         <!-- PARSE_SUSPECTS -->
         <entry key="GET_SUSPECT_LIST"     value-ref="getSuspectListState" />
         <entry key="PARSE_SUSPECT_LIST"   value-ref="parseSuspectState" />
+        
                     
         <!-- PARSE_ARRESTS -->
         <!-- PARSE_CHARGES -->
