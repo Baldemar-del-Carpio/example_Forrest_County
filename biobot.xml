@@ -164,7 +164,7 @@
   <!--IMAGE_ITERATOR-->
   <bean id="imageLocUriIteratorNext" class="local.demo.state_machine.state_machine.transitions.StateTransition">
     <constructor-arg value="#context.getContent() != null" />
-    <constructor-arg value="SAVE_IMAGE" />
+    <constructor-arg value="SET_IMAGE" />
     <constructor-arg value="0" />
   </bean>
   <bean id="imageLocUriIteratorDone" class="local.demo.state_machine.state_machine.transitions.StateTransition">
@@ -185,6 +185,13 @@
     <constructor-arg index="1" value="https://omsweb.public-safety-cloud.com/jtclientweb/Offender/Forrest_County_MS/%s/image" />
     <constructor-arg index="2" ref="imageIterator"/>
   </bean> 
+
+  <!--SET_IMAGE-->
+  <bean id="setImageUrl" class="local.demo.state_machine.state_machine.states.HtmlGetRequestState">
+    <constructor-arg index="0" type="java.lang.String" value="SAVE_IMAGE" />
+    <constructor-arg index="1" type="java.lang.String"><null /></constructor-arg>
+    <constructor-arg index="2" type="java.lang.String" value="json" />
+  </bean>
 
   <!--SAVE_IMAGE-->
   <bean id="saveImageState" class="local.demo.state_machine.state_machine.states.FileGetRequestState">

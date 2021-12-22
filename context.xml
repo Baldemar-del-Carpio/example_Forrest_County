@@ -48,6 +48,7 @@
 
         <!-- PARSE_IMAGES -->
         <entry key="IMAGE_ITERATOR"       value-ref="imageIteratorState" />
+        <entry key="SET_IMAGE"            value-ref="setImageUrl" />
         <entry key="SAVE_IMAGE"           value-ref="saveImageState" />
 
 
