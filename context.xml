@@ -40,7 +40,7 @@
         <!-- PARSE_SUSPECTS -->
         <entry key="GET_SUSPECT_LIST"     value-ref="getSuspectListState" />
         <entry key="PARSE_SUSPECT_LIST"   value-ref="parseSuspectState" />
-        
+
                     
         <!-- PARSE_ARRESTS -->
         <!-- PARSE_CHARGES -->
@@ -48,7 +48,6 @@
 
         <!-- PARSE_IMAGES -->
         <entry key="IMAGE_ITERATOR"       value-ref="imageIteratorState" />
-        <entry key="PARSE_SUSPECT_IMAGE"  value-ref="parseImageState" />
         <entry key="SAVE_IMAGE"           value-ref="saveImageState" />
 
 
