@@ -151,6 +151,10 @@
       <map>
         <entry key="root" value="offenders" />
         <entry key="arrestNo" value="arrestNumber" />
+        <entry key="originalBookDateTime" value="originalBookDateTime" />
+        <entry key="lastName" value="lastName" />
+        <entry key="firstName" value="firstName" />
+        <entry key="middleName" value="middleName" />
       </map>
     </constructor-arg>
     <constructor-arg index="2" value="arrestNumber" />
