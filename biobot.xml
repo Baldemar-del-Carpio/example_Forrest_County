@@ -146,10 +146,11 @@
 
   <!--PARSE_SUSPECT_LIST-->
   <bean id="parseSuspectState" class="local.demo.state_machine.state_machine.states.JsonParserState">
-    <constructor-arg index="0" type="java.lang.String" value="IMAGE_ITERATOR" />
+    <constructor-arg index="0" type="java.lang.String" value="VALIDATION_STATE" />
     <constructor-arg index="1">
       <map>
         <entry key="root" value="offenders" />
+        <entry key="arrestNo" value="arrestNumber" />
       </map>
     </constructor-arg>
     <constructor-arg index="2" value="arrestNumber" />
